@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lionfish Detection - Demo</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #a0a0a0;
+            margin-bottom: 30px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 180, 219, 0.4);
+        }
+        
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 25px 0;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+        }
+        
+        #imageDisplay {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .correct {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.3) 0%, rgba(40, 167, 69, 0.1) 100%);
+            border: 2px solid #28a745;
+        }
+        
+        .incorrect {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.3) 0%, rgba(220, 53, 69, 0.1) 100%);
+            border: 2px solid #dc3545;
+        }
+        
+        .info {
+            display: flex;
+            justify-content: space-between;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .info:last-child {
+            border-bottom: none;
+        }
+        
+        .label {
+            font-weight: bold;
+            color: #a0a0a0;
+        }
+        
+        .value {
+            color: #fff;
+            font-weight: 500;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        
+        .stats h3 {
+            margin-top: 0;
+            color: #00b4db;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #a0a0a0;
+        }
+        
+        .correct-stat { color: #28a745; }
+        .incorrect-stat { color: #dc3545; }
+        .accuracy-stat { color: #00b4db; }
+        
+        .loading {
+            text-align: center;
+            color: #a0a0a0;
+            font-style: italic;
+            padding: 40px;
+        }
+        
+        .loading::after {
+            content: '';
+            animation: dots 1.5s infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .github-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .github-link a {
+            color: #a0a0a0;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        
+        .github-link a:hover {
+            color: #00b4db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐟 Lionfish Detection</h1>
+        <p class="subtitle">CNN-based image classification for invasive species detection</p>
+        
+        <button id="classifyBtn" onclick="classifyRandom()">
+            🔍 Classify Random Image
+        </button>
+        
+        <div id="loading" class="loading" style="display: none;">
+            Analyzing image
+        </div>
+        
+        <div id="results" style="display: none;">
+            <div class="image-container">
+                <img id="imageDisplay" alt="Classified Image">
+            </div>
+            
+            <div id="resultBox" class="result">
+                <div class="info">
+                    <span class="label">Prediction</span>
+                    <span class="value" id="prediction"></span>
+                </div>
+                <div class="info">
+                    <span class="label">Confidence</span>
+                    <span class="value" id="confidence"></span>
+                </div>
+                <div class="info">
+                    <span class="label">True Label</span>
+                    <span class="value" id="trueLabel"></span>
+                </div>
+                <div class="info">
+                    <span class="label">Result</span>
+                    <span class="value" id="result"></span>
+                </div>
+                <div class="info">
+                    <span class="label">Dataset Split</span>
+                    <span class="value" id="split"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <h3>📊 Session Statistics</h3>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-number correct-stat" id="correct">0</div>
+                    <div class="stat-label">Correct</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number incorrect-stat" id="incorrect">0</div>
+                    <div class="stat-label">Incorrect</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number accuracy-stat" id="accuracy">0%</div>
+                    <div class="stat-label">Accuracy</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="github-link">
+            <a href="https://github.com/YOUR_USERNAME/lionfish-detection" target="_blank">
+                View on GitHub →
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        let correctCount = 0;
+        let incorrectCount = 0;
+        
+        // Use relative URL or detect the API location
+        const API_BASE = window.location.origin;
+        
+        async function classifyRandom() {
+            const btn = document.getElementById('classifyBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            btn.disabled = true;
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            
+            try {
+                // Get classification result
+                const response = await fetch(`${API_BASE}/classify/random`);
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                // Get the image
+                const imgResponse = await fetch(`${API_BASE}/classify/random/image`);
+                const imgBlob = await imgResponse.blob();
+                const imgUrl = URL.createObjectURL(imgBlob);
+                
+                // Display image
+                document.getElementById('imageDisplay').src = imgUrl;
+                
+                // Display results
+                document.getElementById('prediction').textContent = data.predicted_class;
+                document.getElementById('confidence').textContent = data.confidence_percent;
+                document.getElementById('trueLabel').textContent = data.true_label;
+                document.getElementById('split').textContent = data.split.toUpperCase();
+                
+                // Set result styling
+                const resultBox = document.getElementById('resultBox');
+                const resultText = document.getElementById('result');
+                
+                if (data.correct) {
+                    resultBox.className = 'result correct';
+                    resultText.textContent = '✓ CORRECT';
+                    resultText.style.color = '#28a745';
+                    correctCount++;
+                } else {
+                    resultBox.className = 'result incorrect';
+                    resultText.textContent = '✗ INCORRECT';
+                    resultText.style.color = '#dc3545';
+                    incorrectCount++;
+                }
+                
+                updateStats();
+                
+                loading.style.display = 'none';
+                results.style.display = 'block';
+                
+            } catch (error) {
+                alert('Error: ' + error.message + '\n\nMake sure the API is running on ' + API_BASE);
+                loading.style.display = 'none';
+            } finally {
+                btn.disabled = false;
+            }
+        }
+        
+        function updateStats() {
+            document.getElementById('correct').textContent = correctCount;
+            document.getElementById('incorrect').textContent = incorrectCount;
+            
+            const total = correctCount + incorrectCount;
+            const accuracy = total > 0 ? ((correctCount / total) * 100).toFixed(1) : 0;
+            document.getElementById('accuracy').textContent = accuracy + '%';
+        }
+    </script>
+</body>
+</html>
