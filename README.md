@@ -7,9 +7,9 @@ A deep learning image classification model that detects invasive lionfish in und
 ![Flask](https://img.shields.io/badge/Flask-3.x-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-> 📚 **Academic Research**: This project was developed as a Master's thesis. Read the full paper: [thesis.pdf](docs/thesis.pdf)
+> This project was developed as a Master's thesis. Read the full paper: [thesis.pdf](docs/thesis.pdf)
 
-## 🎯 Project Overview
+## Project Overview
 
 Lionfish are an invasive species that pose a significant threat to marine ecosystems, particularly in the Atlantic Ocean and Caribbean Sea. This project uses a Convolutional Neural Network (CNN) to classify underwater images as either containing a lionfish or not.
 
@@ -19,7 +19,7 @@ Lionfish are an invasive species that pose a significant threat to marine ecosys
 - **Interactive Web Viewer**: Browser-based UI for testing the model
 - **Real-time Statistics**: Track classification accuracy during testing sessions
 
-## 🏗️ Model Architecture
+## Model Architecture
 
 The CNN model consists of:
 - 3 Convolutional layers (32 → 64 → 128 filters)
@@ -42,7 +42,7 @@ Flatten → Dense(128) → Dropout(0.5)
 Dense(1, sigmoid) → Output
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 lionfish-detection/
@@ -57,7 +57,7 @@ lionfish-detection/
 └── README.md
 ```
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Python 3.10 or higher
@@ -135,7 +135,7 @@ lionfish-detection/
 }
 ```
 
-## 🎓 Training Your Own Model
+## Training Your Own Model
 
 1. Prepare your dataset with the folder structure shown above
 2. Update paths in `model/train_model.py`
@@ -150,14 +150,14 @@ The model uses:
 - **Early Stopping**: Patience of 3 epochs
 - **Class Weights**: Balanced for handling class imbalance
 
-## 📊 Performance
+## Performance
 
 The model achieves strong performance on the test set:
 - Precision, Recall, and F1-Score metrics are calculated
 - Confusion matrix for detailed analysis
 - Training/validation accuracy and loss curves
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 - **TensorFlow/Keras** - Deep learning framework
 - **Flask** - Web API framework
@@ -165,18 +165,7 @@ The model achieves strong performance on the test set:
 - **Pillow** - Image processing
 - **scikit-learn** - Metrics and evaluation
 
-## 📝 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📧 Contact
-
-For questions or feedback, please open an issue on this repository.
-
----
-
-⭐ If you find this project useful, please consider giving it a star!
