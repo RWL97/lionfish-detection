@@ -7,6 +7,8 @@ A deep learning image classification model that detects invasive lionfish in und
 ![Flask](https://img.shields.io/badge/Flask-3.x-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+> 📚 **Academic Research**: This project was developed as a Master's thesis. Read the full paper: [thesis.pdf](docs/thesis.pdf)
+
 ## 🎯 Project Overview
 
 Lionfish are an invasive species that pose a significant threat to marine ecosystems, particularly in the Atlantic Ocean and Caribbean Sea. This project uses a Convolutional Neural Network (CNN) to classify underwater images as either containing a lionfish or not.
